@@ -1,0 +1,21 @@
+POST http://localhost:8000/
+content-type: application/json
+
+{
+    "test": "test attribute"
+}
+
+###
+POST http://localhost:8000/
+content-type: application/json
+
+{
+    "age": 25,
+    "embarked": "C",
+    "pclass": "1",
+    "sex": "male",
+    "sibsp": 1,
+    "parch": 1,
+    "fare": 100
+}
+

@@ -1,4 +1,3 @@
-from secrets import choice
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -39,3 +38,12 @@ class Prediction(models.Model):
     sibsp = models.IntegerField()
     parch = models.IntegerField()
     fare = models.IntegerField()
+
+    prediction = models.IntegerField()
+
+    def predict(self):
+        """
+        This method predicts the change of survival.
+        It has to be used after the object is saved to the database to perform validations of inputs.
+        """
+        pass
