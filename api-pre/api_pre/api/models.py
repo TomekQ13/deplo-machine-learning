@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import pandas as pd
 
 
 class Prediction(models.Model):
@@ -41,9 +42,24 @@ class Prediction(models.Model):
 
     prediction = models.IntegerField()
 
-    def predict(self):
+    def predict(self, pipeline):
         """
         This method predicts the change of survival.
         It has to be used after the object is saved to the database to perform validations of inputs.
         """
-        pass
+        df = pd.DataFrame.from_dict({
+            "Age": [self.age],
+            "Embarked": [self.embarked],
+            "Pclass": [self.pclass],
+            "Sex": [self.sex],
+            "SibSp": [self.sibsp],
+            "Parch": [self.parch],
+            "Fare": [self.fare]
+        })
+        df = df.astype({"Pclass": 'int32'})
+
+        prediction = pipeline.predict_proba(df)[0][1]
+        print(prediction)
+        self.prediction = prediction
+
+        return prediction

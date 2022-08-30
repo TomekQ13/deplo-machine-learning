@@ -19,3 +19,9 @@ content-type: application/json
     "fare": 100
 }
 
+###
+GET http://localhost:8000
+
+###
+PUT http://localhost:8000
+
