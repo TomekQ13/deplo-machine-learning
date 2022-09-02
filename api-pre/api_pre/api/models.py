@@ -57,9 +57,6 @@ class Prediction(models.Model):
             "Fare": [self.fare]
         })
         df = df.astype({"Pclass": 'int32'})
-
         prediction = pipeline.predict_proba(df)[0][1]
-        print(prediction)
         self.prediction = prediction
-
         return prediction

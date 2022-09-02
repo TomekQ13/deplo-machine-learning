@@ -10,12 +10,12 @@ POST http://localhost:8000/
 content-type: application/json
 
 {
-    "age": 25,
+    "age": 10,
     "embarked": "C",
     "pclass": "1",
     "sex": "male",
-    "sibsp": 1,
-    "parch": 1,
+    "sibsp": 0,
+    "parch": 2,
     "fare": 100
 }
 
