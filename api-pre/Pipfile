@@ -8,6 +8,8 @@ django = "*"
 joblib = "*"
 sklearn = "*"
 pandas = "*"
+djangorestframework = "*"
+django-rest-swagger = "*"
 
 [dev-packages]
 

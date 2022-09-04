@@ -24,7 +24,8 @@ class Prediction(models.Model):
 
     pclass = models.CharField(
         max_length=1,
-        choices=Pclass.choices
+        choices=Pclass.choices,
+        verbose_name='Ticket class'
     )
 
     class Sex(models.TextChoices):
@@ -36,9 +37,13 @@ class Prediction(models.Model):
         choices=Sex.choices
     )
 
-    sibsp = models.IntegerField()
-    parch = models.IntegerField()
-    fare = models.IntegerField()
+    sibsp = models.IntegerField(
+        verbose_name='Number of siblings or spouses abord'
+    )
+    parch = models.IntegerField(
+        verbose_name='Number of children or parents abord'
+    )
+    fare = models.IntegerField(verbose_name='Ticket price')
 
     prediction = models.IntegerField()
 
@@ -58,5 +63,5 @@ class Prediction(models.Model):
         })
         df = df.astype({"Pclass": 'int32'})
         prediction = pipeline.predict_proba(df)[0][1]
-        self.prediction = prediction
+        self.prediction = round(prediction * 10000)
         return prediction

@@ -1,37 +1,29 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+from django.http import HttpResponseNotFound
+from django.shortcuts import render
 from joblib import load
+
 from .models import Prediction
-from django.http import HttpResponseNotFound, HttpResponseBadRequest
+from .forms import PredictionForm
 
 pipelineLoaded = load('../../model/pipeline.bin')
 
 
-@csrf_exempt
 def index(request):
-
-    if (request.method != 'POST'):
+    if (request.method != 'POST' and request.method != 'GET'):
         return HttpResponseNotFound()
 
-    required_attributes = {
-        'age',
-        'sex',
-        'embarked',
-        'pclass',
-        'sibsp',
-        'parch',
-        'fare'
+    if (request.method == 'GET'):
+        form = PredictionForm()
+        return render(request, 'api/index.html', {'form': form})
+
+    form_submitted = PredictionForm(request.POST)
+    context = {
+        'form': form_submitted
     }
+    if (form_submitted.is_valid()):
+        new_prediction = Prediction(**form_submitted.cleaned_data)
+        new_prediction.predict(pipelineLoaded)
+        new_prediction.save()
+        context['prediction'] = new_prediction.prediction/10000
 
-    raw_data = json.loads(request.body)
-    prediction_data = {}
-    for attribute in required_attributes:
-        if attribute not in raw_data:
-            return HttpResponseBadRequest(json.dumps({'message': f'{attribute} attribute is missing in the body'}))
-        prediction_data[attribute.lower()] = raw_data[attribute]
-
-    new_prediction = Prediction(**prediction_data)
-    new_prediction.predict(pipelineLoaded)
-    new_prediction.save()
-    return JsonResponse({'survived_probability': new_prediction.prediction})
+    return render(request, 'api/index.html', context)
